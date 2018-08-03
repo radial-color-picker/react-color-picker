@@ -8,5 +8,12 @@ module.exports = {
         react: 'React'
       }
     }
+  },
+  webpack: {
+    extractText: {
+      allChunks: true,
+      filename: process.env.NODE_ENV === 'production' ? `react-color-picker.min.css` : 'react-color-picker.css'
+    },
+    hoisting: true
   }
 }
