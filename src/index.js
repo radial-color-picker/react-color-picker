@@ -88,12 +88,12 @@ export default class ColorPicker extends React.Component {
     onKeyDown = ev => {
         if (this.state.isDisabled) return;
 
-        ev.preventDefault();
-
         const isIncrementing = ev.key === 'ArrowUp' || ev.key === 'ArrowRight';
         const isDecrementing = ev.key === 'ArrowDown' || ev.key === 'ArrowLeft';
 
         if (isIncrementing || isDecrementing) {
+            ev.preventDefault();
+
             let multiplier = isIncrementing ? 1 : -1;
 
             if (ev.ctrlKey) {
