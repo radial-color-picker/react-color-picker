@@ -1,25 +1,19 @@
-## Prerequisites
+## Contributing
 
-[Node.js](http://nodejs.org/) >= v4 must be installed.
+Contributions are **welcome** and will be fully **credited**.
 
-## Installation
+We accept contributions via Pull Requests on [Github](https://github.com/radial-color-picker/react-color-picker).
 
-- Running `npm install` in the component's root directory will install everything you need for development.
+## Pull Requests
 
-## Demo Development Server
+- **Document any change in behaviour** - Make sure the `README.md` and any other relevant documentation are kept up-to-date.
 
-- `npm start` will run a development server with the component's demo app at [http://localhost:3000](http://localhost:3000) with hot module reloading.
+- **Consider our release cycle** - We try to follow [SemVer](https://semver.org/). Randomly breaking public APIs is not an option.
 
-## Running Tests
+- **Create feature branches** - Don't ask us to pull from your master branch.
 
-- `npm test` will run the tests once.
+- **One pull request per feature** - If you want to do more than one thing, send multiple pull requests.
 
-- `npm run test:coverage` will run the tests and produce a coverage report in `coverage/`.
+- **Send coherent history** - Make sure each individual commit in your pull request is meaningful. If you had to make multiple intermediate commits while developing, please [squash them](https://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) before submitting.
 
-- `npm run test:watch` will run the tests on every change.
-
-## Building
-
-- `npm run build` will build the component for publishing to npm and also bundle the demo app.
-
-- `npm run clean` will delete built resources.
+**Happy coding**!

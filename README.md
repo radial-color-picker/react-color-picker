@@ -82,7 +82,7 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 [Back To Top](#quick-links)
 
 ## Options
-`ColorPicker` is a controlled component. It's current state is defined and by the props you pass to it.
+`ColorPicker` is a controlled component. It's current state is defined and updated by the props you pass to it.
 
 ### Props
 
