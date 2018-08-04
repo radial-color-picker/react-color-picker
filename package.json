@@ -5,6 +5,7 @@
   "main": "dist/react-color-picker.cjs.js",
   "module": "dist/react-color-picker.esm.js",
   "browser": "dist/react-color-picker.umd.min.js",
+  "unpkg": "dist/react-color-picker.umd.min.js",
   "files": [
     "dist"
   ],
@@ -15,9 +16,6 @@
   "dependencies": {
     "@radial-color-picker/color-wheel": "^1.0.0",
     "@radial-color-picker/rotator": "^1.0.1"
-  },
-  "peerDependencies": {
-    "react": "16.x"
   },
   "devDependencies": {
     "autoprefixer": "^9.0.0",
@@ -39,6 +37,14 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^1.6.2"
   },
+  "peerDependencies": {
+    "react": "16.x"
+  },
+  "browserslist": [
+    ">0.75%",
+    "not ie 11",
+    "not op_mini all"
+  ],
   "homepage": "https://github.com/radial-color-picker/react-color-picker#readme",
   "repository": "git@github.com:radial-color-picker/react-color-picker.git",
   "author": "Rosen Kanev <rkunev@gmail.com>",
