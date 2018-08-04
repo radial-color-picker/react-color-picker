@@ -57,7 +57,7 @@ And in your app:
 
 ```jsx
 import ColorPicker from '@radial-color-picker/react-color-picker';
-import '@radial-color-picker/react-color-picker/umd/react-color-picker.min.css';
+import '@radial-color-picker/react-color-picker/dist/react-color-picker.umd.min.css';
 
 class App extends React.Component {
     state = {
@@ -77,7 +77,7 @@ class App extends React.Component {
 }
 ```
 
-Depending on your build tool of choice (webpack, parcel, rollup) you may have to setup the appropriate loaders or plugins. If you're using `create-react-app` you don't have to do anything else - it comes preconfigured and supports CSS/SCSS import out of the box.
+Depending on your build tool of choice (webpack, parcel, rollup) you may have to setup the appropriate loaders or plugins. If you're using `create-react-app` you don't have to do anything else - it comes preconfigured and supports CSS import out of the box.
 
 [Back To Top](#quick-links)
 
