@@ -1,6 +1,6 @@
 {
   "name": "@radial-color-picker/react-color-picker",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.1",
   "description": "Radial Color Picker - React",
   "main": "dist/react-color-picker.cjs.js",
   "module": "dist/react-color-picker.esm.js",
