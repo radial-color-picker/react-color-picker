@@ -1,42 +1,70 @@
 import autoprefixer from 'autoprefixer';
 import babel from 'rollup-plugin-babel';
-import butternut from 'rollup-plugin-butternut';
-import commonjs from 'rollup-plugin-commonjs';
+import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import resolve from 'rollup-plugin-node-resolve';
 
-import pkg from './package.json';
+const file = 'dist/react-color-picker';
 
 export default [
     {
         input: 'src/index.js',
         output: [
-            { file: pkg.main, format: 'cjs' },
-            { file: pkg.module, format: 'es' }
+            { file: `${file}.cjs.js`, format: 'cjs' },
+            { file: `${file}.esm.js`, format: 'esm' }
         ],
         external: ['react'],
         plugins: [
-            postcss({ extract: false }),
-            babel({ exclude: ['node_modules/**'] }),
             resolve(),
-            commonjs(),
+            postcss({
+                extract: false,
+                inject: false,
+            }),
+            babel(),
         ]
     },
     {
         input: 'src/index.js',
         output: {
-            file: pkg.browser,
+            file: `${file}.umd.js`,
             format: 'umd',
             name: 'ReactColorPicker',
-            globals: { react: 'React' },
+            globals: { react: 'React' }
         },
         external: ['react'],
         plugins: [
-            postcss({ extract: true, plugins: [autoprefixer], minimize: true }),
-            babel({ exclude: ['node_modules/**'] }),
             resolve(),
-            commonjs(),
-            butternut(),
+            postcss({
+                extract: `${file}.css`,
+                inject: false,
+                minimize: false,
+                sourceMap: false,
+                plugins: [autoprefixer],
+            }),
+            babel(),
         ]
+    },
+    {
+        input: 'src/index.js',
+        output: {
+            file: `${file}.umd.min.js`,
+            format: 'umd',
+            name: 'ReactColorPicker',
+            globals: { react: 'React' },
+            sourcemap: true,
+        },
+        external: ['react'],
+        plugins: [
+            resolve(),
+            postcss({
+                extract: `${file}.min.css`,
+                inject: false,
+                minimize: true,
+                sourceMap: true,
+                plugins: [autoprefixer],
+            }),
+            babel(),
+            terser(),
+        ],
     },
 ];

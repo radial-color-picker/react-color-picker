@@ -4,7 +4,6 @@
   "description": "Radial Color Picker - React",
   "main": "dist/react-color-picker.cjs.js",
   "module": "dist/react-color-picker.esm.js",
-  "browser": "dist/react-color-picker.umd.min.js",
   "unpkg": "dist/react-color-picker.umd.min.js",
   "files": [
     "dist"
@@ -14,36 +13,28 @@
     "start": "rollup -c -w"
   },
   "dependencies": {
-    "@radial-color-picker/color-wheel": "1.0.0",
-    "@radial-color-picker/rotator": "1.0.1"
+    "@radial-color-picker/color-wheel": "2.0.0",
+    "@radial-color-picker/rotator": "2.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "9.1.0",
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.3",
-    "babel-plugin-external-helpers": "6.22.0",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-react": "6.24.1",
-    "node-sass": "4.9.2",
-    "postcss": "7.0.2",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "rollup": "0.63.5",
-    "rollup-plugin-babel": "3.0.7",
-    "rollup-plugin-butternut": "0.1.0",
-    "rollup-plugin-commonjs": "9.1.4",
-    "rollup-plugin-node-resolve": "3.3.0",
-    "rollup-plugin-postcss": "1.6.2"
+    "@babel/core": "7.4.5",
+    "@babel/plugin-proposal-class-properties": "7.4.4",
+    "@babel/preset-env": "7.4.5",
+    "@babel/preset-react": "7.0.0",
+    "autoprefixer": "9.6.0",
+    "postcss": "7.0.17",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "rollup": "1.15.6",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-commonjs": "10.0.0",
+    "rollup-plugin-node-resolve": "5.0.3",
+    "rollup-plugin-postcss": "2.0.3",
+    "rollup-plugin-terser": "5.0.0"
   },
   "peerDependencies": {
-    "react": "^16.3.2"
+    "react": "^16.7.0"
   },
-  "browserslist": [
-    ">0.75%",
-    "not ie 11",
-    "not op_mini all"
-  ],
   "homepage": "https://github.com/radial-color-picker/react-color-picker#readme",
   "repository": "git@github.com:radial-color-picker/react-color-picker.git",
   "author": "Rosen Kanev <rkunev@gmail.com>",
