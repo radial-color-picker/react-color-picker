@@ -2,7 +2,7 @@ import autoprefixer from 'autoprefixer';
 import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
-import resolve from 'rollup-plugin-node-resolve';
+import resolve from '@rollup/plugin-node-resolve';
 
 const file = 'dist/react-color-picker';
 
