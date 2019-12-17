@@ -1,56 +1,114 @@
-import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import React from 'react';
 import fillColorWheel from '@radial-color-picker/color-wheel';
 import Rotator from '@radial-color-picker/rotator';
 import './style.css';
 
 const noop = () => {};
 
-const ColorPicker = ({
-    hue = 0,
-    saturation = 100,
-    luminosity = 50,
-    alpha = 1,
-    step = 2,
-    mouseScroll = false,
-    variant = 'collapsible', // collapsible | persistent
-    disabled = false,
-    initiallyCollapsed = false,
-    onInput = noop,
-    onChange = noop,
-}) => {
-    const palette = useRef(null);
-    const rotator = useRef(null);
-    const el = useRef(null);
-    const rcp = useRef(null);
+export default class ColorPicker extends React.Component {
+    paletteRef = React.createRef();
+    rotatorRef = React.createRef();
+    elRef = React.createRef();
 
-    const [isKnobIn, setIsKnobIn] = useState(!initiallyCollapsed);
-    const [isPaletteIn, setIsPaletteIn] = useState(!initiallyCollapsed);
-    const [isPressed, setIsPressed] = useState(false);
-    const [isRippling, setIsRippling] = useState(false);
-    const [isDragging, setIsDragging] = useState(false);
+    rotator = null;
 
-    function onScroll(ev) {
-        if (isPressed || !isKnobIn) return;
+    static defaultProps = {
+        hue: 0,
+        saturation: 100,
+        luminosity: 50,
+        alpha: 1,
+        step: 2,
+        mouseScroll: false,
+        variant: 'collapsible', // collapsible | persistent
+        disabled: false,
+        initiallyCollapsed: false,
+        onInput: noop,
+        onChange: noop,
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            // update the SSR value once when the component is created
+            // prevents knob jumping when using Server Side Rendering
+            // where the knob's position is updated only after the client-side code is executed (on mount)
+            ssrHue: props.hue,
+
+            isKnobIn: !this.props.initiallyCollapsed,
+            isPaletteIn: !this.props.initiallyCollapsed,
+            isPressed: false,
+            isRippling: false,
+            isDragging: false,
+        };
+    }
+
+    componentDidMount() {
+        if (this.props.mouseScroll) {
+            this.rotatorRef.current.addEventListener('wheel', this.onScroll);
+        }
+
+        if (this.props.initiallyCollapsed && this.props.variant === 'persistent') {
+            console.warn(
+                `Incorrect config: using variant="persistent" and initiallyCollapsed={true} at the same time is not supported.`
+            );
+        }
+
+        const isConicGradientSupported = getComputedStyle(this.paletteRef.current).backgroundImage.includes('conic');
+
+        if (!isConicGradientSupported) {
+            fillColorWheel(this.paletteRef.current.firstElementChild, this.elRef.current.offsetWidth || 280);
+        }
+
+        this.rotator = new Rotator(this.rotatorRef.current, {
+            angle: this.props.hue,
+            onRotate: this.updateColor,
+            onDragStart: () => {
+                this.setState({ isDragging: true });
+            },
+            onDragStop: () => {
+                this.setState({ isDragging: false });
+            },
+        });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.hue !== prevProps.hue) {
+            this.rotator.angle = this.props.hue;
+        }
+    }
+
+    componentWillUnmount() {
+        this.rotator.destroy();
+        this.rotator = null;
+
+        if (this.props.mouseScroll) {
+            this.rotatorRef.current.removeEventListener('wheel', this.onScroll);
+        }
+    }
+
+    onScroll = ev => {
+        if (this.state.isPressed || !this.state.isKnobIn) return;
 
         ev.preventDefault();
 
         if (ev.deltaY > 0) {
-            rcp.current.angle += step;
+            this.rotator.angle += this.props.step;
         } else {
-            rcp.current.angle -= step;
+            this.rotator.angle -= this.props.step;
         }
 
-        updateColor(rcp.current.angle);
-    }
+        this.updateColor(this.rotator.angle);
+    };
 
-    function onKeyUp(ev) {
+    onKeyUp = ev => {
         if (ev.key === 'Enter') {
-            selectColor();
+            this.selectColor();
         }
-    }
+    };
 
-    function onKeyDown(ev) {
-        if (disabled || isPressed || !isKnobIn) return;
+    onKeyDown = ev => {
+        if (this.props.disabled || this.state.isPressed || !this.state.isKnobIn) return;
 
         const isIncrementing = ev.key === 'ArrowUp' || ev.key === 'ArrowRight';
         const isDecrementing = ev.key === 'ArrowDown' || ev.key === 'ArrowLeft';
@@ -66,125 +124,96 @@ const ColorPicker = ({
                 multiplier *= 3;
             }
 
-            rcp.current.angle += step * multiplier;
-            updateColor(rcp.current.angle);
+            this.rotator.angle += this.props.step * multiplier;
+            this.updateColor(this.rotator.angle);
         }
-    }
+    };
 
-    function updateColor(hue) {
-        onInput(hue);
-    }
+    updateColor = hue => {
+        this.props.onInput(hue);
+    };
 
-    function rotateToMouse(ev) {
-        if (isPressed || !isKnobIn || ev.target !== rotator.current) return;
+    rotateToMouse = ev => {
+        if (this.state.isPressed || !this.state.isKnobIn || ev.target !== this.rotatorRef.current) return;
 
-        rcp.current.setAngleFromEvent(ev);
-    }
+        this.rotator.setAngleFromEvent(ev);
+    };
 
-    function selectColor() {
-        setIsPressed(true);
+    selectColor = () => {
+        this.setState({ isPressed: true });
 
-        if (isPaletteIn && isKnobIn) {
-            onChange(hue);
-            setIsRippling(true);
+        if (this.state.isPaletteIn && this.state.isKnobIn) {
+            this.props.onChange(this.props.hue);
+            this.setState({ isRippling: true });
         } else {
-            setIsPaletteIn(true);
+            this.setState({ isPaletteIn: true });
         }
-    }
+    };
 
-    function togglePicker() {
-        if (variant !== 'persistent') {
-            if (isKnobIn) {
-                setIsKnobIn(false);
+    togglePicker = () => {
+        if (this.props.variant !== 'persistent') {
+            if (this.state.isKnobIn) {
+                this.setState({ isKnobIn: false });
             } else {
-                setIsKnobIn(true);
-                setIsPaletteIn(true);
+                this.setState({
+                    isKnobIn: true,
+                    isPaletteIn: true,
+                });
             }
         }
 
-        setIsRippling(false);
-        setIsPressed(false);
-    }
-
-    function hidePalette() {
-        if (!isKnobIn) {
-            setIsPaletteIn(false);
-        }
-    }
-
-    useLayoutEffect(() => {
-        const rotatorEl = rotator.current;
-        if (mouseScroll) {
-            rotatorEl.addEventListener('wheel', onScroll);
-        }
-
-        if (initiallyCollapsed && variant === 'persistent') {
-            console.warn(
-                `Incorrect config: using variant="persistent" and initiallyCollapsed={true} at the same time is not supported.`
-            );
-        }
-
-        const isConicGradientSupported = getComputedStyle(palette.current).backgroundImage.includes('conic');
-
-        if (!isConicGradientSupported) {
-            fillColorWheel(palette.current.firstElementChild, el.current.offsetWidth || 280);
-        }
-
-        rcp.current = new Rotator(rotator.current, {
-            angle: hue,
-            onRotate: updateColor,
-            onDragStart: () => setIsDragging(true),
-            onDragStop: () => setIsDragging(false),
+        this.setState({
+            isRippling: false,
+            isPressed: false,
         });
+    };
 
-        return () => {
-            rcp.current.destroy();
+    hidePalette = () => {
+        if (!this.state.isKnobIn) {
+            this.setState({ isPaletteIn: false });
+        }
+    };
 
-            if (mouseScroll) {
-                rotatorEl.removeEventListener('wheel', onScroll);
-            }
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    render() {
+        const { disabled, hue, saturation, luminosity, alpha } = this.props;
+        const { isDragging, isPressed, isPaletteIn, isKnobIn, isRippling, ssrHue } = this.state;
 
-    useEffect(() => {
-        rcp.current.angle = hue;
-    }, [hue]);
+        const color = `hsla(${hue}, ${saturation}%, ${luminosity}%, ${alpha})`;
 
-    const color = `hsla(${hue}, ${saturation}%, ${luminosity}%, ${alpha})`;
-
-    return (
-        <div
-            ref={el}
-            className={`rcp ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`.trim()}
-            tabIndex={disabled ? -1 : 0}
-            onKeyUp={onKeyUp}
-            onKeyDown={onKeyDown}
-        >
-            <div ref={palette} className={`rcp__palette ${isPaletteIn ? 'in' : 'out'}`}>
-                <canvas />
-            </div>
-
+        return (
             <div
-                ref={rotator}
-                className="rcp__rotator"
-                style={{ pointerEvents: disabled || isPressed || !isKnobIn ? 'none' : null }}
-                onDoubleClick={rotateToMouse}
+                ref={this.elRef}
+                className={`rcp ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`.trim()}
+                tabIndex={disabled ? -1 : 0}
+                onKeyUp={this.onKeyUp}
+                onKeyDown={this.onKeyDown}
             >
-                <div className={`rcp__knob ${isKnobIn ? 'in' : 'out'}`} onTransitionEnd={hidePalette} />
+                <div ref={this.paletteRef} className={`rcp__palette ${isPaletteIn ? 'in' : 'out'}`}>
+                    <canvas />
+                </div>
+
+                <div
+                    ref={this.rotatorRef}
+                    className="rcp__rotator"
+                    style={{
+                        pointerEvents: disabled || isPressed || !isKnobIn ? 'none' : null,
+                        transform: `rotate(${ssrHue}deg)`,
+                    }}
+                    onDoubleClick={this.rotateToMouse}
+                >
+                    <div className={`rcp__knob ${isKnobIn ? 'in' : 'out'}`} onTransitionEnd={this.hidePalette} />
+                </div>
+
+                <div className={`rcp__ripple ${isRippling ? 'rippling' : ''}`.trim()} style={{ borderColor: color }} />
+
+                <button
+                    type="button"
+                    className={`rcp__well ${isPressed ? 'pressed' : ''}`.trim()}
+                    style={{ backgroundColor: color }}
+                    onClick={this.selectColor}
+                    onAnimationEnd={this.togglePicker}
+                />
             </div>
-
-            <div className={`rcp__ripple ${isRippling ? 'rippling' : ''}`.trim()} style={{ borderColor: color }} />
-
-            <button
-                type="button"
-                className={`rcp__well ${isPressed ? 'pressed' : ''}`.trim()}
-                style={{ backgroundColor: color }}
-                onClick={selectColor}
-                onAnimationEnd={togglePicker}
-            />
-        </div>
-    );
-};
-
-export default ColorPicker;
+        );
+    }
+}
