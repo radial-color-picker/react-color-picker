@@ -3,6 +3,7 @@ import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
 
 const file = 'dist/react-color-picker';
 
@@ -33,6 +34,9 @@ export default [
         },
         external: ['react'],
         plugins: [
+            replace({
+                'process.env.NODE_ENV': JSON.stringify('development'),
+            }),
             resolve(),
             postcss({
                 extract: `${file}.css`,
@@ -55,6 +59,9 @@ export default [
         },
         external: ['react'],
         plugins: [
+            replace({
+                'process.env.NODE_ENV': JSON.stringify('production'),
+            }),
             resolve(),
             postcss({
                 extract: `${file}.min.css`,

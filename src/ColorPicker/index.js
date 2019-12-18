@@ -48,7 +48,11 @@ export default class ColorPicker extends React.Component {
             this.rotatorRef.current.addEventListener('wheel', this.onScroll);
         }
 
-        if (this.props.initiallyCollapsed && this.props.variant === 'persistent') {
+        if (
+            process.env.NODE_ENV === 'development' &&
+            this.props.initiallyCollapsed &&
+            this.props.variant === 'persistent'
+        ) {
             console.warn(
                 `Incorrect config: using variant="persistent" and initiallyCollapsed={true} at the same time is not supported.`
             );
