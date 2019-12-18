@@ -4,7 +4,7 @@
 
 <p align="center">
     <a href="https://www.npmjs.com/package/@radial-color-picker/react-color-picker">
-        <img src="https://img.shields.io/npm/dt/@radial-color-picker/react-color-picker.svg" alt="Downloads">
+        <img src="https://img.shields.io/npm/dm/@radial-color-picker/react-color-picker.svg" alt="Downloads">
     </a>
     <a href="https://www.npmjs.com/package/@radial-color-picker/react-color-picker">
         <img src="https://img.shields.io/npm/v/@radial-color-picker/react-color-picker.svg" alt="Version">
@@ -19,7 +19,7 @@
 Great UX starts with two basic principles - ease of use and simplicity. Selecting a color should be as easy as moving a slider, clicking a checkbox or pressing a key just like other basic form elements behave.
 
 This is a flexible and minimalistic color picker. Developed with mobile devices and keyboard usage in mind. Key features:
-* Small size - 3.7 KB gzipped (JS and CSS combined)
+* Small size - 3.8 KB gzipped (JS and CSS combined)
 * Supports touch devices
 * Optimized animations
 * Ease of use
@@ -55,7 +55,6 @@ The right color picker, but not the framework you're looking for?
 
 ## Usage
 
-#### With Module Build System
 Color Picker on [npm](https://www.npmjs.com/package/@radial-color-picker/react-color-picker)
 ```bash
 npm install @radial-color-picker/react-color-picker
@@ -75,8 +74,8 @@ class App extends React.Component {
         alpha: 1,
     };
 
-    onChange = ({ hue, saturation, luminosity, alpha }) => {
-        this.setState({ hue, saturation, luminosity, alpha });
+    onChange = (hue) => {
+        this.setState({ hue });
     };
 
     render() {
@@ -94,16 +93,19 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 
 ### Props
 
-| Options       | Type    | Default/Description |
-|---------------|---------|---------------------|
-| `hue`         | Number  | Defaults to 0 (red color)  |
-| `saturation`  | Number  | Defaults to 100  |
-| `luminosity`  | Number  | Defaults to 50  |
-| `alpha`       | Number  | Defaults to 1  |
-| `mouseScroll` | Boolean | Use wheel (scroll) event to rotate. Defaults to false. |
-| `step`        | Number  | Amount of degrees to rotate the picker with keyboard and/or wheel. <br> Defaults to 2 degrees. |
-| `onSelect`    | Function | Callback which is triggered when a color is selected. |
-| `onChange`    | Function | A function to invoke when color is changed (i.e. on rotation). |
+| Name         | Type    | Default        | Description |
+|--------------|---------|----------------|-------------|
+| hue          | Number  | `0`            | A number between `0-359`. **Required**. |
+| saturation   | Number  | `100`          | A number between `0-100` |
+| luminosity   | Number  | `50`           | A number between `0-100` |
+| alpha        | Number  | `1`            | A number between `0-1` |
+| disabled     | Boolean | `false`        | A boolean to disable UI interactions |
+| step         | Number  | `2`            | Amount of degrees to rotate the picker with keyboard and/or wheel. |
+| variant      | String  | `collapsible`  | Use `persistent` to prevent collapsing/closing |
+| initiallyCollapsed | Boolean | `false` | Hides the palette initially |
+| mouseScroll | Boolean | `false`        | Use wheel (scroll) event to rotate. |
+| onInput    | Function | noop | Called every time the color changes (i.e. rotation). **Required**. |
+| onChange    | Function | noop | Called when the user dismisses the color picker (i.e. interacting with the middle color well). |
 
 [Back To Top](#quick-links)
 
@@ -133,6 +135,35 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 Please see [Releases][link-releases] for more information on what has changed recently.
 
 [Back To Top](#quick-links)
+
+## Migration from v1
+
+Straight forward - the `onChange` prop now contains only the `hue` instead of an object with the full color model.
+
+```diff
+import ColorPicker from '@radial-color-picker/react-color-picker';
+import '@radial-color-picker/react-color-picker/dist/react-color-picker.umd.min.css';
+
+class App extends React.Component {
+    state = {
+        hue: 90,
+        saturation: 100,
+        luminosity: 50,
+        alpha: 1,
+    };
+
+-    onChange = ({ hue, saturation, luminosity, alpha }) => {
+-        this.setState({ hue, saturation, luminosity, alpha });
+-   };
++    onChange = (hue) => {
++        this.setState({ hue });
++   };
+
+    render() {
+        return <ColorPicker {...this.state} onChange={this.onChange} />;
+    }
+}
+```
 
 ## Contributing
 
