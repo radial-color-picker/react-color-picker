@@ -35,6 +35,8 @@ export default [
         plugins: [
             resolve(),
             postcss({
+                // rollup-plugin-postcss is using deprecated rollup APIs
+                // @link https://github.com/egoist/rollup-plugin-postcss/issues/258
                 extract: `${file}.css`,
                 inject: false,
                 minimize: false,
@@ -57,6 +59,8 @@ export default [
         plugins: [
             resolve(),
             postcss({
+                // rollup-plugin-postcss is using deprecated rollup APIs
+                // @link https://github.com/egoist/rollup-plugin-postcss/issues/258
                 extract: `${file}.min.css`,
                 inject: false,
                 minimize: true,

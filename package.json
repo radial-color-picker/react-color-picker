@@ -13,24 +13,23 @@
     "start": "rollup -c -w"
   },
   "dependencies": {
-    "@radial-color-picker/color-wheel": "2.0.0",
-    "@radial-color-picker/rotator": "2.0.1"
+    "@radial-color-picker/color-wheel": "2.2.1",
+    "@radial-color-picker/rotator": "2.1.1"
   },
   "devDependencies": {
-    "@babel/core": "7.4.5",
-    "@babel/plugin-proposal-class-properties": "7.4.4",
-    "@babel/preset-env": "7.4.5",
-    "@babel/preset-react": "7.0.0",
-    "autoprefixer": "9.6.0",
-    "postcss": "7.0.17",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
-    "rollup": "1.15.6",
-    "rollup-plugin-babel": "4.3.2",
-    "rollup-plugin-commonjs": "10.0.0",
-    "rollup-plugin-node-resolve": "5.0.3",
-    "rollup-plugin-postcss": "2.0.3",
-    "rollup-plugin-terser": "5.0.0"
+    "@babel/core": "7.9.0",
+    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/preset-env": "7.9.5",
+    "@babel/preset-react": "7.9.4",
+    "autoprefixer": "9.7.6",
+    "postcss": "7.0.27",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "rollup": "2.6.1",
+    "rollup-plugin-babel": "4.4.0",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-postcss": "2.6.4",
+    "rollup-plugin-terser": "5.3.0"
   },
   "peerDependencies": {
     "react": "^16.7.0"
