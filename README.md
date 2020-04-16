@@ -19,7 +19,7 @@
 Great UX starts with two basic principles - ease of use and simplicity. Selecting a color should be as easy as moving a slider, clicking a checkbox or pressing a key just like other basic form elements behave.
 
 This is a flexible and minimalistic color picker. Developed with mobile devices and keyboard usage in mind. Key features:
-* Small size - 3.7 KB gzipped (JS and CSS combined)
+* Small size - 3.45 KB gzipped (JS and CSS combined)
 * Supports touch devices
 * Optimized animations
 * Ease of use
@@ -36,7 +36,7 @@ The right color picker, but not the framework you're looking for?
 * [React][link-react-color-picker] - you're here!
 * [Vue][link-vue-color-picker]
 * [AngularJs][link-angularjs-color-picker]
-* [Angular][link-angular-color-picker] (under construction)
+* [Angular][link-angular-color-picker]
 
 ## Quick Links
 
@@ -65,22 +65,27 @@ And in your app:
 
 ```jsx
 import ColorPicker from '@radial-color-picker/react-color-picker';
-import '@radial-color-picker/react-color-picker/dist/react-color-picker.umd.min.css';
+import '@radial-color-picker/react-color-picker/dist/react-color-picker.min.css';
 
-class App extends React.Component {
-    state = {
+function App() {
+    const [color, setColor] = React.useState({
         hue: 90,
         saturation: 100,
         luminosity: 50,
         alpha: 1,
-    };
+    });
 
-    onChange = ({ hue, saturation, luminosity, alpha }) => {
-        this.setState({ hue, saturation, luminosity, alpha });
+    const onInput = hue => {
+        setColor(prev => {
+            return {
+                ...prev,
+                hue,
+            };
+        });
     };
 
     render() {
-        return <ColorPicker {...this.state} onChange={this.onChange} />;
+        return <ColorPicker {...color} onInput={onInput} />;
     }
 }
 ```
@@ -94,16 +99,17 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 
 ### Props
 
-| Options       | Type    | Default/Description |
-|---------------|---------|---------------------|
-| `hue`         | Number  | Defaults to 0 (red color)  |
-| `saturation`  | Number  | Defaults to 100  |
-| `luminosity`  | Number  | Defaults to 50  |
-| `alpha`       | Number  | Defaults to 1  |
-| `mouseScroll` | Boolean | Use wheel (scroll) event to rotate. Defaults to false. |
-| `step`        | Number  | Amount of degrees to rotate the picker with keyboard and/or wheel. <br> Defaults to 2 degrees. |
-| `onSelect`    | Function | Callback which is triggered when a color is selected. |
-| `onChange`    | Function | A function to invoke when color is changed (i.e. on rotation). |
+| Name         | Type    | Default        | Description |
+|--------------|---------|----------------|-------------|
+| hue          | Number  | `0`            | A number between `0-359`. **Required**. |
+| saturation   | Number  | `100`          | A number between `0-100` |
+| luminosity   | Number  | `50`           | A number between `0-100` |
+| alpha        | Number  | `1`            | A number between `0-1` |
+| disabled     | Boolean | `false`        | A boolean to disable UI interactions |
+| step         | Number  | `2`            | Amount of degrees to rotate the picker with keyboard and/or wheel. |
+| variant      | String  | `collapsible`  | Use `persistent` to prevent collapsing/closing |
+| initiallyCollapsed | Boolean | `false` | Hides the palette initially |
+| mouseScroll | Boolean | `false`        | Use wheel (scroll) event to rotate. |
 
 [Back To Top](#quick-links)
 
@@ -121,12 +127,11 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 
 <details>
     <summary>Why is the scroll-to-rotate functionality not turned on by default?</summary>
-    <p>It's another non-passive event that could potentially introduce jank on scroll. To rotate the color knob, but stay on the same scrolling position the <code>wheel</code> event is blocked with <code>preventDefault()</code>. Thus, if you really want this feature for your users you'll have to explicitly add <code>:mouse-scroll="true"</code>.</p>
+    <p>It's another non-passive event that could potentially introduce jank on scroll. To rotate the color knob, but stay on the same scrolling position the <code>wheel</code> event is blocked with <code>preventDefault()</code>. Thus, if you really want this feature for your users you'll have to explicitly add <code>mouseScroll="true"</code>.</p>
 </details>
 <br>
 
 [Back To Top](#quick-links)
-
 
 ## Change log
 
