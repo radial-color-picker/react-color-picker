@@ -45,6 +45,7 @@ The right color picker, but not the framework you're looking for?
 * [Options](#options)
 * [FAQ](#first-asked-questions)
 * [Change log](#change-log)
+* [Migration from v1](#migration-from-v1)
 * [Contributing](#contributing)
 * [Credits](#credits)
 * [License](#license)
@@ -136,6 +137,60 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 ## Change log
 
 Please see [Releases][link-releases] for more information on what has changed recently.
+
+[Back To Top](#quick-links)
+
+## Migration from v1
+
+v2 comes with lots of performance improvements like native CSS `conic-gradient` support and lots of bugfixes, but some things were changed as well.
+
+1. The UMD prefix in the CSS file name is now gone:
+
+```diff
+- import '@radial-color-picker/react-color-picker/dist/react-color-picker.umd.min.css';
++ import '@radial-color-picker/react-color-picker/dist/react-color-picker.min.css';
+```
+
+2. The `onChange` prop is called `onInput` and `onSelect` prop is called `onChange` now. The reason for that is to align with the event names on the HTML `<input type="color">`.
+
+```diff
+- <ColorPicker {...color} onChange={onHueChange} onSelect={onMiddleSelectorClick} />
++ <ColorPicker {...color} onInput={onHueChange} onChange={onMiddleSelectorClick} />
+```
+
+<details>
+    <summary>Details</summary>
+    <p>As is the case with other <code>&lt;input&gt;</code> types, there are two events that can be used to detect changes to the color value: input and change. input is fired on the <code>&lt;input&gt;</code> element every time the color changes. The change event is fired when the user dismisses the color picker.</p>
+    <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color#Tracking_color_changes">Source</p>
+</details>
+
+<br>
+
+3. The `onInput` and `onChange` props were streamlined and will no longer pass the `saturation`, `luminosity` and `alpha` props back. Instead `hue` will be the only param. This reduces unneeded object creation and in certain edge-cases skips unneeded re-renders (comparing two numbers vs. two objects).
+
+```diff
+- const onHueChange = (color) => {
+-     setHue(color.hue);
+- };
+
++ const onHueChange = (hue) => {
++     setHue(hue);
++ };
+```
+
+4. The internal CSS class names also changed. You should avoid relying on the inner DOM structure and CSS class names, but if you did here's a handy list of what was renamed:
+    * `.color-picker` -> `.rcp`
+    * `.palette` -> `.rcp__palette`
+    * `.knob` -> `.rcp__knob`
+    * `.rotator` -> `.rcp__rotator`
+    * `.selector` -> `.rcp__well`
+    * `.ripple` -> `.rcp__ripple`
+    * `.is-in` -> `.in`
+    * `.is-out` -> `.out`
+    * `.is-pressed` -> `.pressed`
+    * `.is-rippling` -> `.rippling`
+    * `@keyframes color-picker-ripple` -> `@keyframes rcp-ripple`
+    * `@keyframes color-picker-beat` -> `@keyframes rcp-beat`
 
 [Back To Top](#quick-links)
 
