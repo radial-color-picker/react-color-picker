@@ -34,7 +34,7 @@ const ColorPicker = ({
             rotatorRef.current.addEventListener('wheel', onScroll);
         }
 
-        if (initiallyCollapsed && variant === 'persistent') {
+        if (process.env.NODE_ENV === 'development' && initiallyCollapsed && variant === 'persistent') {
             console.warn(
                 `Incorrect config: using variant="persistent" and initiallyCollapsed={true} at the same time is not supported.`
             );

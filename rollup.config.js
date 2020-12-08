@@ -3,6 +3,7 @@ import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import resolve from 'rollup-plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
 
 const input = 'src/ColorPicker/index.js';
 const name = 'react-color-picker';
@@ -12,7 +13,7 @@ export default [
         input,
         output: [
             { file: `dist/${name}.cjs.js`, format: 'cjs', exports: 'default' },
-            { file: `dist/${name}.esm.js`, format: 'esm' }
+            { file: `dist/${name}.esm.js`, format: 'esm' },
         ],
         external: ['react'],
         plugins: [
@@ -22,7 +23,7 @@ export default [
                 inject: false,
             }),
             babel(),
-        ]
+        ],
     },
     {
         input,
@@ -30,10 +31,13 @@ export default [
             file: `dist/${name}.umd.js`,
             format: 'umd',
             name: 'ReactColorPicker',
-            globals: { react: 'React' }
+            globals: { react: 'React' },
         },
         external: ['react'],
         plugins: [
+            replace({
+                'process.env.NODE_ENV': JSON.stringify('development'),
+            }),
             resolve(),
             postcss({
                 extract: `${name}.css`,
@@ -43,7 +47,7 @@ export default [
                 plugins: [autoprefixer],
             }),
             babel(),
-        ]
+        ],
     },
     {
         input,
@@ -56,6 +60,9 @@ export default [
         },
         external: ['react'],
         plugins: [
+            replace({
+                'process.env.NODE_ENV': JSON.stringify('production'),
+            }),
             resolve(),
             postcss({
                 extract: `${name}.min.css`,
