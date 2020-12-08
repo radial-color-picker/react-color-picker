@@ -16,3 +16,6 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+# local .eslintcache file
+.eslintcache

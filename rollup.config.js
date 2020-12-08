@@ -4,11 +4,12 @@ import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import resolve from 'rollup-plugin-node-resolve';
 
+const input = 'src/ColorPicker/index.js';
 const file = 'dist/react-color-picker';
 
 export default [
     {
-        input: 'src/index.js',
+        input,
         output: [
             { file: `${file}.cjs.js`, format: 'cjs' },
             { file: `${file}.esm.js`, format: 'esm' }
@@ -24,7 +25,7 @@ export default [
         ]
     },
     {
-        input: 'src/index.js',
+        input,
         output: {
             file: `${file}.umd.js`,
             format: 'umd',
@@ -47,7 +48,7 @@ export default [
         ]
     },
     {
-        input: 'src/index.js',
+        input,
         output: {
             file: `${file}.umd.min.js`,
             format: 'umd',
