@@ -1,12 +1,26 @@
-import autoprefixer from 'autoprefixer';
-import babel from 'rollup-plugin-babel';
-import { terser } from 'rollup-plugin-terser';
-import postcss from 'rollup-plugin-postcss';
-import resolve from 'rollup-plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
+import resolve from '@rollup/plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
 
 const input = 'src/ColorPicker/index.js';
 const name = 'react-color-picker';
+
+const getBabelConfig = runtime => {
+    return {
+        babelHelpers: 'bundled',
+        presets: [
+            [
+                '@babel/preset-env',
+                {
+                    loose: true,
+                    modules: false,
+                },
+            ],
+            ['@babel/preset-react', { runtime }],
+        ],
+    };
+};
 
 export default [
     {
@@ -15,15 +29,8 @@ export default [
             { file: `dist/${name}.cjs.js`, format: 'cjs', exports: 'default' },
             { file: `dist/${name}.esm.js`, format: 'esm' },
         ],
-        external: ['react'],
-        plugins: [
-            resolve(),
-            postcss({
-                extract: false,
-                inject: false,
-            }),
-            babel(),
-        ],
+        external: ['react', 'react/jsx-runtime'],
+        plugins: [babel(getBabelConfig('automatic')), resolve()],
     },
     {
         input,
@@ -38,15 +45,8 @@ export default [
             replace({
                 'process.env.NODE_ENV': JSON.stringify('development'),
             }),
+            babel(getBabelConfig('classic')),
             resolve(),
-            postcss({
-                extract: `${name}.css`,
-                inject: false,
-                minimize: false,
-                sourceMap: false,
-                plugins: [autoprefixer],
-            }),
-            babel(),
         ],
     },
     {
@@ -63,15 +63,8 @@ export default [
             replace({
                 'process.env.NODE_ENV': JSON.stringify('production'),
             }),
+            babel(getBabelConfig('classic')),
             resolve(),
-            postcss({
-                extract: `${name}.min.css`,
-                inject: false,
-                minimize: true,
-                sourceMap: true,
-                plugins: [autoprefixer],
-            }),
-            babel(),
             terser(),
         ],
     },
