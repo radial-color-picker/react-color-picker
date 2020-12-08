@@ -1,6 +1,7 @@
 import React from 'react';
 import fillColorWheel from '@radial-color-picker/color-wheel';
 import Rotator from '@radial-color-picker/rotator';
+import './style.css';
 
 const noop = () => {};
 
