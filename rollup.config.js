@@ -5,14 +5,14 @@ import postcss from 'rollup-plugin-postcss';
 import resolve from 'rollup-plugin-node-resolve';
 
 const input = 'src/ColorPicker/index.js';
-const file = 'dist/react-color-picker';
+const name = 'react-color-picker';
 
 export default [
     {
         input,
         output: [
-            { file: `${file}.cjs.js`, format: 'cjs' },
-            { file: `${file}.esm.js`, format: 'esm' }
+            { file: `dist/${name}.cjs.js`, format: 'cjs', exports: 'default' },
+            { file: `dist/${name}.esm.js`, format: 'esm' }
         ],
         external: ['react'],
         plugins: [
@@ -27,7 +27,7 @@ export default [
     {
         input,
         output: {
-            file: `${file}.umd.js`,
+            file: `dist/${name}.umd.js`,
             format: 'umd',
             name: 'ReactColorPicker',
             globals: { react: 'React' }
@@ -36,7 +36,7 @@ export default [
         plugins: [
             resolve(),
             postcss({
-                extract: `${file}.css`,
+                extract: `${name}.css`,
                 inject: false,
                 minimize: false,
                 sourceMap: false,
@@ -48,7 +48,7 @@ export default [
     {
         input,
         output: {
-            file: `${file}.umd.min.js`,
+            file: `dist/${name}.umd.min.js`,
             format: 'umd',
             name: 'ReactColorPicker',
             globals: { react: 'React' },
@@ -58,7 +58,7 @@ export default [
         plugins: [
             resolve(),
             postcss({
-                extract: `${file}.min.css`,
+                extract: `${name}.min.css`,
                 inject: false,
                 minimize: true,
                 sourceMap: true,
