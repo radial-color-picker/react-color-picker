@@ -22,6 +22,7 @@ const ColorPicker = ({
     const elRef = useRef(null);
     const rotator = useRef(null);
 
+    const [ssrHue, setSsrHue] = useState(hue);
     const [isKnobIn, setIsKnobIn] = useState(!initiallyCollapsed);
     const [isPaletteIn, setIsPaletteIn] = useState(!initiallyCollapsed);
     const [isPressed, setIsPressed] = useState(false);
@@ -170,7 +171,10 @@ const ColorPicker = ({
             <div
                 ref={rotatorRef}
                 className="rcp__rotator"
-                style={{ pointerEvents: disabled || isPressed || !isKnobIn ? 'none' : null }}
+                style={{
+                    pointerEvents: disabled || isPressed || !isKnobIn ? 'none' : null,
+                    transform: `rotate(${ssrHue}deg)`,
+                }}
                 onDoubleClick={rotateToMouse}
             >
                 <div className={`rcp__knob ${isKnobIn ? 'in' : 'out'}`} onTransitionEnd={hidePalette} />
