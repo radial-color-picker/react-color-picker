@@ -46,6 +46,9 @@
   "keywords": [
     "react",
     "radial color picker",
-    "color picker"
+    "color picker",
+    "color-picker",
+    "react-color-picker",
+    "hue picker"
   ]
 }
