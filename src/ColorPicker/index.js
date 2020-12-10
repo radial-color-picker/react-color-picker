@@ -3,26 +3,47 @@ import fillColorWheel from '@radial-color-picker/color-wheel';
 import Rotator from '@radial-color-picker/rotator';
 
 const noop = () => {};
+const colors = ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta', 'red'];
+const keys = {
+    ArrowUp: (oldAngle, step) => oldAngle + step,
+    ArrowRight: (oldAngle, step) => oldAngle + step,
+    ArrowDown: (oldAngle, step) => oldAngle - step,
+    ArrowLeft: (oldAngle, step) => oldAngle - step,
+    PageUp: (oldAngle, step) => oldAngle + step * 10,
+    PageDown: (oldAngle, step) => oldAngle - step * 10,
+    Home: () => 0,
+    End: () => 359,
+};
 
 const ColorPicker = ({
     hue = 0,
     saturation = 100,
     luminosity = 50,
     alpha = 1,
-    step = 2,
-    mouseScroll = false,
-    variant = 'collapsible', // collapsible | persistent
     disabled = false,
+    step = 1,
+    variant = 'collapsible', // collapsible | persistent
     initiallyCollapsed = false,
+    mouseScroll = false,
+    ariaLabelColorWell = 'color well',
     onInput = noop,
     onChange = noop,
+    onSelect = noop,
+    className,
+    ...rest
 }) => {
     const paletteRef = useRef(null);
     const rotatorRef = useRef(null);
     const elRef = useRef(null);
     const rotator = useRef(null);
 
+    const angleRef = useRef(hue);
+
+    // set the SSR value just once when the component is created
+    // prevents knob jumping when using Server Side Rendering
+    // where the knob's position is updated only after the client-side code is executed (on mount)
     const [ssrHue, setSsrHue] = useState(hue);
+
     const [isKnobIn, setIsKnobIn] = useState(!initiallyCollapsed);
     const [isPaletteIn, setIsPaletteIn] = useState(!initiallyCollapsed);
     const [isPressed, setIsPressed] = useState(false);
@@ -47,13 +68,17 @@ const ColorPicker = ({
         }
 
         rotator.current = new Rotator(rotatorRef.current, {
-            angle: hue,
-            onRotate: updateColor,
+            angle: angleRef.current,
+            onRotate(value) {
+                angleRef.current = value;
+                onInput(value);
+            },
             onDragStart() {
                 setIsDragging(true);
             },
             onDragStop() {
                 setIsDragging(false);
+                onChange(angleRef.current);
             },
         });
 
@@ -68,6 +93,7 @@ const ColorPicker = ({
     }, []);
 
     useEffect(() => {
+        angleRef.current = hue;
         rotator.current.angle = hue;
     }, [hue]);
 
@@ -76,45 +102,35 @@ const ColorPicker = ({
 
         ev.preventDefault();
 
-        if (ev.deltaY > 0) {
-            rotator.current.angle += step;
-        } else {
-            rotator.current.angle -= step;
-        }
+        const newAngle = ev.deltaY > 0
+            ? rotator.current.angle + step
+            : rotator.current.angle - step;
 
-        updateColor(rotator.current.angle);
+        rotator.current.angle = newAngle;
+
+        angleRef.current = newAngle;
+        onInput(newAngle);
+        onChange(newAngle);
     };
 
     const onKeyUp = ev => {
-        if (ev.key === 'Enter') {
+        if (ev.key === 'Enter' && ev.target === elRef.current) {
             selectColor();
         }
     };
 
     const onKeyDown = ev => {
-        if (disabled || isPressed || !isKnobIn) return;
+        if (disabled || isPressed || !isKnobIn || !(ev.key in keys)) return;
 
-        const isIncrementing = ev.key === 'ArrowUp' || ev.key === 'ArrowRight';
-        const isDecrementing = ev.key === 'ArrowDown' || ev.key === 'ArrowLeft';
+        ev.preventDefault();
 
-        if (isIncrementing || isDecrementing) {
-            ev.preventDefault();
+        const newAngle = keys[ev.key](rotator.current.angle, step);
 
-            let multiplier = isIncrementing ? 1 : -1;
+        rotator.current.angle = newAngle;
 
-            if (ev.ctrlKey) {
-                multiplier *= 6;
-            } else if (ev.shiftKey) {
-                multiplier *= 3;
-            }
-
-            rotator.current.angle += step * multiplier;
-            updateColor(rotator.current.angle);
-        }
-    };
-
-    const updateColor = hue => {
-        onInput(hue);
+        angleRef.current = newAngle;
+        onInput(newAngle);
+        onChange(newAngle);
     };
 
     const rotateToMouse = ev => {
@@ -127,7 +143,7 @@ const ColorPicker = ({
         setIsPressed(true);
 
         if (isPaletteIn && isKnobIn) {
-            onChange(hue);
+            onSelect(angleRef.current);
             setIsRippling(true);
         } else {
             setIsPaletteIn(true);
@@ -154,12 +170,22 @@ const ColorPicker = ({
         }
     };
 
-    const color = `hsla(${hue}, ${saturation}%, ${luminosity}%, ${alpha})`;
+    const color = `hsla(${angleRef.current}, ${saturation}%, ${luminosity}%, ${alpha})`;
 
     return (
         <div
+            aria-roledescription="radial slider"
+            aria-label="color picker"
+            aria-valuetext={colors[Math.round(angleRef.current / 60)]}
+            {...rest}
+            aria-expanded={isPaletteIn}
+            aria-valuenow={angleRef.current}
+            aria-disabled={disabled}
+            aria-valuemin={0}
+            aria-valuemax={359}
             ref={elRef}
-            className={`rcp ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`.trim()}
+            role="slider"
+            className={`rcp ${className} ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`.trim()}
             tabIndex={disabled ? -1 : 0}
             onKeyUp={onKeyUp}
             onKeyDown={onKeyDown}
@@ -175,7 +201,6 @@ const ColorPicker = ({
                     pointerEvents: disabled || isPressed || !isKnobIn ? 'none' : null,
                     transform: `rotate(${ssrHue}deg)`,
                 }}
-                onDoubleClick={rotateToMouse}
             >
                 <div className={`rcp__knob ${isKnobIn ? 'in' : 'out'}`} onTransitionEnd={hidePalette} />
             </div>
@@ -186,8 +211,11 @@ const ColorPicker = ({
                 type="button"
                 className={`rcp__well ${isPressed ? 'pressed' : ''}`.trim()}
                 style={{ backgroundColor: color }}
-                onClick={selectColor}
+                aria-label={ariaLabelColorWell}
+                disabled={disabled}
+                tabIndex={disabled ? -1 : 0}
                 onAnimationEnd={togglePicker}
+                onClick={selectColor}
             />
         </div>
     );

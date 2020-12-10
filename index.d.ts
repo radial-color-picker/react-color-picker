@@ -1,10 +1,10 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ComponentPropsWithoutRef } from 'react';
 
-export type ColorPickerProps = {
+type Props = {
     /**
      * A number between 0-359. Around 0º/360º are reds. 120º is where greens are and 240º are blues. Default: 0
      */
-    hue: number;
+    hue?: number;
 
     /**
      * A number between 0-100. The larger the percentage, the more "colorful" this color is. 0% is completely desaturated (grayscale). 100% is fully saturated (full color). Default: 100
@@ -47,6 +47,11 @@ export type ColorPickerProps = {
     mouseScroll?: boolean;
 
     /**
+     * Defines a string value that labels the color well (middle selector). Default: color well
+     */
+    ariaLabelColorWell?: string;
+
+    /**
      * Called every time the color updates. This could be a touchstart/mousedown event, when rotating the knob, keyboard shortcuts like ↑, and scrolling if enabled. It's also the glue between the color picker component and the outside world. Use this to update the hue prop.
      */
     onInput?: (hue: number) => void;
@@ -55,7 +60,16 @@ export type ColorPickerProps = {
      * Called every time the color changes, but unlike onInput this is not called while rotating the knob. onChange is a less noisy version of onInput which is useful if you want to react to knob rotation stop for example or to use the <ColorPicker> as an uncontrolled component.
      */
     onChange?: (hue: number) => void;
+
+    /**
+     * Called when the user dismisses the color picker (i.e. interacting with the middle color well). Can be used as a secondary confirmation step from the user that this is the color value to be saved for example.
+     */
+    onSelect?: (hue: number) => void;
 };
+
+type KeysToOmit = keyof Props | 'role' | 'tabIndex' | 'onKeyUp' | 'onKeyDown';
+
+export type ColorPickerProps = Omit<ComponentPropsWithoutRef<'div'>, KeysToOmit> & Props;
 
 declare const ColorPicker: FunctionComponent<ColorPickerProps>;
 
