@@ -102,9 +102,7 @@ const ColorPicker = ({
 
         ev.preventDefault();
 
-        const newAngle = ev.deltaY > 0
-            ? rotator.current.angle + step
-            : rotator.current.angle - step;
+        const newAngle = ev.deltaY > 0 ? rotator.current.angle + step : rotator.current.angle - step;
 
         rotator.current.angle = newAngle;
 
@@ -171,6 +169,9 @@ const ColorPicker = ({
     };
 
     const color = `hsla(${angleRef.current}, ${saturation}%, ${luminosity}%, ${alpha})`;
+    const wrapperClassNames = ['rcp', className, isDragging && 'dragging', disabled && 'disabled']
+        .filter(Boolean)
+        .join(' ');
 
     return (
         <div
@@ -185,7 +186,7 @@ const ColorPicker = ({
             aria-valuemax={359}
             ref={elRef}
             role="slider"
-            className={`rcp ${className} ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`.trim()}
+            className={wrapperClassNames}
             tabIndex={disabled ? -1 : 0}
             onKeyUp={onKeyUp}
             onKeyDown={onKeyDown}
