@@ -1,4 +1,6 @@
-.rcp, .rcp div, .rcp button {
+.rcp,
+.rcp div,
+.rcp button {
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
@@ -70,8 +72,7 @@
     border-radius: 50%;
     overflow: hidden;
     will-change: transform, opacity;
-    transition: transform .5s cubic-bezier(0.35, 0, 0.25, 1),
-                opacity .5s cubic-bezier(0.35, 0, 0.25, 1);
+    transition: transform 0.5s cubic-bezier(0.35, 0, 0.25, 1), opacity 0.5s cubic-bezier(0.35, 0, 0.25, 1);
 }
 
 .rcp__palette.in {
@@ -103,7 +104,7 @@
     top: 2.5%;
     left: 46.5%;
     background-color: #fff;
-    transition: transform .4s cubic-bezier(0.35, 0, 0.25, 1);
+    transition: transform 0.4s cubic-bezier(0.35, 0, 0.25, 1);
     outline: 0;
     border-style: none;
 }
@@ -151,7 +152,7 @@
 }
 
 .rcp__well.pressed {
-    animation: rcp-beat .4s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+    animation: rcp-beat 0.4s cubic-bezier(0.35, 0, 0.25, 1) forwards;
 }
 
 .disabled .rcp__well {
@@ -173,12 +174,17 @@
 
 .rcp__ripple.rippling {
     z-index: 0;
-    animation: rcp-ripple .5s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+    animation: rcp-ripple 0.5s cubic-bezier(0.35, 0, 0.25, 1) forwards;
 }
 
 @keyframes rcp-ripple {
-    0% { transform: scale(1); opacity: .3; }
-    50% { opacity: .1; }
+    0% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.1;
+    }
     100% {
         opacity: 0;
         border-width: 0;
@@ -187,8 +193,16 @@
 }
 
 @keyframes rcp-beat {
-    0% { transform: scale(1); }
-    25% { transform: scale(0.8); }
-    50% { transform: scale(1); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(0.8);
+    }
+    50% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
