@@ -23,12 +23,12 @@ This is a flexible and minimalistic color picker. Developed with mobile devices 
 * Supports touch devices
 * Optimized animations
 * Ease of use
-    * Double click anywhere to move the knob to a color
-    * <kbd>Tab</kbd> to focus the picker
-    * <kbd>↑</kbd> or <kbd>→</kbd> arrow key to increase hue. <kbd>Shift + ↑/→</kbd> to go quicker and <kbd>Ctrl + ↑/→</kbd> to go even quicker.
-    * <kbd>↓</kbd> or <kbd>←</kbd> arrow key to decrease hue. <kbd>Shift + ↓/←</kbd> to go quicker and <kbd>Ctrl + ↓/←</kbd> to go even quicker.
-    * <kbd>Enter</kbd> to select a color and close the picker or to open it
-    * Mouse <kbd>ScrollUp</kbd> to increase and <kbd>ScrollDown</kbd> to decrease hue (Opt-in)
+    * Screen reader support.
+    * <kbd>Tab</kbd> to focus the picker.
+    * <kbd>↑</kbd> or <kbd>→</kbd> arrow key to increase hue. <kbd>PgUp</kbd> to go quicker.
+    * <kbd>↓</kbd> or <kbd>←</kbd> arrow key to decrease hue. <kbd>PgDown</kbd> to go quicker.
+    * <kbd>Enter</kbd> to select a color and close the picker or to open it.
+    * Mouse <kbd>ScrollUp</kbd> to increase and <kbd>ScrollDown</kbd> to decrease hue (Opt-in).
 
 ## Ecosystem
 
@@ -45,7 +45,7 @@ The right color picker, but not the framework you're looking for?
 * [Options](#options)
 * [FAQ](#first-asked-questions)
 * [Change log](#change-log)
-* [Migration from v1](#migration-from-v1)
+* [Migration](#migration)
 * [Contributing](#contributing)
 * [Credits](#credits)
 * [License](#license)
@@ -57,7 +57,9 @@ The right color picker, but not the framework you're looking for?
 ## Usage
 
 #### With Module Build System
+
 Color Picker on [npm](https://www.npmjs.com/package/@radial-color-picker/react-color-picker)
+
 ```bash
 npm install @radial-color-picker/react-color-picker
 ```
@@ -85,9 +87,7 @@ function App() {
         });
     };
 
-    render() {
-        return <ColorPicker {...color} onInput={onInput} />;
-    }
+    return <ColorPicker {...color} onInput={onInput} />;
 }
 ```
 
@@ -96,13 +96,19 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 [Back To Top](#quick-links)
 
 ## Options
-`ColorPicker` is a controlled component. It's current state is defined and updated by the props you pass to it.
 
-### Props
+`ColorPicker` can be used either as a controlled component or as uncontrolled component.
+```jsx
+// Controlled component. Its current state is defined and updated by the props you pass to it.
+<ColorPicker hue={value} onInput={hue => setValue(hue)} />
+
+// Uncontrolled component. You can use onChange to react to knob rotation stop for example.
+<ColorPicker onChange={hue => console.log('Current color:', hue)} />
+```
 
 | Name         | Type    | Default        | Description |
 |--------------|---------|----------------|-------------|
-| hue          | Number  | `0`            | A number between `0-359`. **Required**. |
+| hue          | Number  | `0`            | A number between `0-359`. |
 | saturation   | Number  | `100`          | A number between `0-100` |
 | luminosity   | Number  | `50`           | A number between `0-100` |
 | alpha        | Number  | `1`            | A number between `0-1` |
@@ -111,10 +117,19 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 | variant      | String  | `collapsible`  | Use `persistent` to prevent collapsing/closing |
 | initiallyCollapsed | Boolean | `false` | Hides the palette initially |
 | mouseScroll | Boolean | `false`        | Use wheel (scroll) event to rotate. |
+| ariaLabelColorWell | String  | `color well`  | Labels the color well |
+| onInput    | Function | noop | Called every time the color updates. Use this to update the hue prop. |
+| onChange    | Function | noop |  Called every time the color changes, but unlike onInput this is not called while rotating the knob. |
+| onSelect    | Function | noop |  Called when the user dismisses the color picker (i.e. interacting with the middle color well). |
 
 [Back To Top](#quick-links)
 
 ## First Asked Questions
+
+<details>
+    <summary>What's the browser support?</summary>
+    <p>The last two versions of major browsers (Chrome, Safari, Firefox, Edge) are supported though it will probably work in other browsers, webviews and runtimes as well.</p>
+</details>
 
 <details>
     <summary>How to select other shades of the solid colors?</summary>
@@ -122,14 +137,20 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 </details>
 
 <details>
-    <summary>Why does Google Chrome throw a <code>[Violation] Added non-passive event listener to a scroll-blocking 'touchmove' event.</code> warning in the console?</summary>
-    <p><code>touchmove</code> is used with <code>preventDefault()</code> to block scrolling on mobile while rotating the color knob. Even the <a href="https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#removing-the-need-to-cancel-events">Web Incubator Community Group</a> acknowledges that in some cases a passive event listener can't be used.</p>
+    <summary>Why exactly <code>onInput</code>/<code>onChange</code> events?</summary>
+    <p>Event names are based on the HTML <code>&lt;input type="color"&gt;</code>. <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color#Tracking_color_changes">MDN</a>: As is the case with other <code>&lt;input&gt;</code> types, there are two events that can be used to detect changes to the color value: input and change. input is fired on the <code>&lt;input&gt;</code> element every time the color changes. The change event is fired when the user dismisses the color picker.</p>
 </details>
 
 <details>
     <summary>Why is the scroll-to-rotate functionality not turned on by default?</summary>
-    <p>It's another non-passive event that could potentially introduce jank on scroll. To rotate the color knob, but stay on the same scrolling position the <code>wheel</code> event is blocked with <code>preventDefault()</code>. Thus, if you really want this feature for your users you'll have to explicitly add <code>mouseScroll="true"</code>.</p>
+    <p>It's another non-passive event that could potentially introduce jank on scroll. To rotate the color knob, but stay on the same scrolling position the <code>wheel</code> event is blocked with <code>preventDefault()</code>. Thus, if you really want this feature for your users you'll have to explicitly add <code>mouseScroll={true}</code>.</p>
 </details>
+
+<details>
+    <summary>Why does Google Chrome throw a <code>[Violation] Added non-passive event listener to a scroll-blocking 'touchmove' event.</code> warning in the console?</summary>
+    <p><code>touchmove</code> is used with <code>preventDefault()</code> to block scrolling on mobile while rotating the color knob. Even the <a href="https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#removing-the-need-to-cancel-events">Web Incubator Community Group</a> acknowledges that in some cases a passive event listener can't be used.</p>
+</details>
+
 <br>
 
 [Back To Top](#quick-links)
@@ -140,7 +161,32 @@ Please see [Releases][link-releases] for more information on what has changed re
 
 [Back To Top](#quick-links)
 
-## Migration from v1
+## Migration
+
+### Migration from v2
+
+1. Double-click to move the knob to the current position of the pointer is gone since this is now the default behavior as soon as the clicks on the palette. If you had a tooltip or a help section in your app that described the shortcut you should remove it.
+
+2. With v3 the keyboard shortcuts are better aligned with the suggested keys for any [sliders](https://www.w3.org/TR/wai-aria-practices/#slider). This means that the <kbd>Shift/Ctrl + ↑/→</kbd>/<kbd>Shift/Ctrl + ↓/←</kbd> non-standard key combos are replaced by the simpler <kbd>PageDown</kbd> and <kbd>PageUp</kbd>. If you had a tooltip or a help section in your app that described the shortcut keys you should update it.
+
+3. The `onChange` event is now emitted when the user changes the color (knob drop, click on the palette, keyboard interaction, scroll) and a `onSelect` event is emitted when interacting with the color well (middle selector).
+
+```diff
+  <ColorPicker
+      hue={hue}
+      onInput={updateHue}
+-     onChange={onColorSelect}
+  />
+
+  <ColorPicker
+      hue={hue}
+      onInput={updateHue}
++     onChange={onColorChange}
++     onSelect={onColorSelect}
+  />
+```
+
+### Migration from v1
 
 v2 comes with lots of performance improvements like native CSS `conic-gradient` support and lots of bugfixes, but some things were changed as well.
 
@@ -157,12 +203,6 @@ v2 comes with lots of performance improvements like native CSS `conic-gradient` 
 - <ColorPicker {...color} onChange={onHueChange} onSelect={onMiddleSelectorClick} />
 + <ColorPicker {...color} onInput={onHueChange} onChange={onMiddleSelectorClick} />
 ```
-
-<details>
-    <summary>Details</summary>
-    <p>As is the case with other <code>&lt;input&gt;</code> types, there are two events that can be used to detect changes to the color value: input and change. input is fired on the <code>&lt;input&gt;</code> element every time the color changes. The change event is fired when the user dismisses the color picker.</p>
-    <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color#Tracking_color_changes">Source</p>
-</details>
 
 <br>
 
