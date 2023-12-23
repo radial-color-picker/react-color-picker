@@ -39,7 +39,7 @@ type Props = {
     /**
      * Hides the palette initially. Using variant="persistent" and initiallyCollapsed={true} at the same time is not supported. Default: false
      */
-    initiallyCollapsed?: boolean,
+    initiallyCollapsed?: boolean;
 
     /**
      * Use wheel (scroll) event to rotate. By default it's off to keep things simple. Add mouseScroll={true} to allow the user to change the color by scrolling with mouse/trackpad. Default: false

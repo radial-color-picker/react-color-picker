@@ -9,15 +9,11 @@ function App() {
         alpha: 1,
     });
 
-    const onInput = hue => {
-        setColor(prev => ({ ...prev, hue }));
+    const onInput = (hue) => {
+        setColor((prev) => ({ ...prev, hue }));
     };
 
-    return (
-        <div className="App">
-            <ColorPicker {...color} onInput={onInput} />
-        </div>
-    );
+    return <ColorPicker {...color} onInput={onInput} />;
 }
 
 export default App;

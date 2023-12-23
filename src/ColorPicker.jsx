@@ -85,7 +85,7 @@ const ColorPicker = ({
         rotator.current.angle = hue;
     }, [hue]);
 
-    const onScroll = ev => {
+    const onScroll = (ev) => {
         if (isPressed || !isKnobIn) return;
 
         ev.preventDefault();
@@ -99,13 +99,13 @@ const ColorPicker = ({
         onChange(newAngle);
     };
 
-    const onKeyUp = ev => {
+    const onKeyUp = (ev) => {
         if (ev.key === 'Enter' && ev.target === elRef.current) {
             selectColor();
         }
     };
 
-    const onKeyDown = ev => {
+    const onKeyDown = (ev) => {
         if (disabled || isPressed || !isKnobIn || !(ev.key in keys)) return;
 
         ev.preventDefault();
@@ -119,7 +119,7 @@ const ColorPicker = ({
         onChange(newAngle);
     };
 
-    const rotateToMouse = ev => {
+    const rotateToMouse = (ev) => {
         if (isPressed || !isKnobIn || ev.target !== rotatorRef.current) return;
 
         rotator.current.setAngleFromEvent(ev);
