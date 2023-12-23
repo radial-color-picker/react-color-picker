@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from 'react';
 import fillColorWheel from '@radial-color-picker/color-wheel';
 import Rotator from '@radial-color-picker/rotator';
 
+import './style.css';
+
 const noop = () => {};
 const colors = ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta', 'red'];
 const keys = {
@@ -53,12 +55,6 @@ const ColorPicker = ({
     useEffect(() => {
         if (mouseScroll) {
             rotatorRef.current.addEventListener('wheel', onScroll);
-        }
-
-        if (process.env.NODE_ENV === 'development' && initiallyCollapsed && variant === 'persistent') {
-            console.warn(
-                `Incorrect config: using variant="persistent" and initiallyCollapsed={true} at the same time is not supported.`
-            );
         }
 
         const isConicGradientSupported = getComputedStyle(paletteRef.current).backgroundImage.includes('conic');

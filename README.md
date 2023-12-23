@@ -68,7 +68,7 @@ And in your app:
 
 ```jsx
 import ColorPicker from '@radial-color-picker/react-color-picker';
-import '@radial-color-picker/react-color-picker/dist/react-color-picker.min.css';
+import '@radial-color-picker/react-color-picker/dist/style.css';
 
 function App() {
     const [color, setColor] = React.useState({
