@@ -19,7 +19,7 @@
 Great UX starts with two basic principles - ease of use and simplicity. Selecting a color should be as easy as moving a slider, clicking a checkbox or pressing a key just like other basic form elements behave.
 
 This is a flexible and minimalistic color picker. Developed with mobile devices and keyboard usage in mind. Key features:
-* Small size - 3.6 KB gzipped (JS and CSS combined)
+* Small size - 2.9 KB gzipped (JS and CSS combined)
 * Supports touch devices
 * Optimized animations
 * Ease of use
@@ -37,18 +37,6 @@ The right color picker, but not the framework you're looking for?
 * [Vue][link-vue-color-picker]
 * [AngularJs][link-angularjs-color-picker]
 * [Angular][link-angular-color-picker]
-
-## Quick Links
-
-* [Demos](#demos)
-* [Usage](#usage)
-* [Options](#options)
-* [FAQ](#first-asked-questions)
-* [Change log](#change-log)
-* [Migration](#migration)
-* [Contributing](#contributing)
-* [Credits](#credits)
-* [License](#license)
 
 ## Demos
 
@@ -71,39 +59,32 @@ import ColorPicker from '@radial-color-picker/react-color-picker';
 import '@radial-color-picker/react-color-picker/dist/style.css';
 
 function App() {
-    const [color, setColor] = React.useState({
+    const [color, setColor] = useState({
         hue: 90,
         saturation: 100,
         luminosity: 50,
         alpha: 1,
     });
 
-    const onInput = hue => {
-        setColor(prev => {
-            return {
-                ...prev,
-                hue,
-            };
-        });
+    const onInput = (hue) => {
+        setColor((prev) => ({ ...prev, hue }));
     };
 
     return <ColorPicker {...color} onInput={onInput} />;
 }
 ```
 
-Depending on your build tool of choice (webpack, parcel, rollup) you may have to setup the appropriate loaders or plugins. If you're using `create-react-app` you don't have to do anything else - it comes preconfigured and supports CSS import out of the box.
-
-[Back To Top](#quick-links)
+Depending on your build tool of choice (vite, webpack, etc.) you may have to setup the appropriate plugins or loaders. If you're using `vite` you don't have to do anything else - it comes preconfigured and supports CSS import out of the box.
 
 ## Options
 
 `ColorPicker` can be used either as a controlled component or as uncontrolled component.
 ```jsx
 // Controlled component. Its current state is defined and updated by the props you pass to it.
-<ColorPicker hue={value} onInput={hue => setValue(hue)} />
+<ColorPicker hue={value} onInput={(hue) => setValue(hue)} />
 
 // Uncontrolled component. You can use onChange to react to knob rotation stop for example.
-<ColorPicker onChange={hue => console.log('Current color:', hue)} />
+<ColorPicker onChange={(hue) => console.log('Current color:', hue)} />
 ```
 
 | Name         | Type    | Default        | Description |
@@ -121,8 +102,6 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
 | onInput    | Function | noop | Called every time the color updates. Use this to update the hue prop. |
 | onChange    | Function | noop |  Called every time the color changes, but unlike onInput this is not called while rotating the knob. |
 | onSelect    | Function | noop |  Called when the user dismisses the color picker (i.e. interacting with the middle color well). |
-
-[Back To Top](#quick-links)
 
 ## First Asked Questions
 
@@ -146,24 +125,21 @@ Depending on your build tool of choice (webpack, parcel, rollup) you may have to
     <p>It's another non-passive event that could potentially introduce jank on scroll. To rotate the color knob, but stay on the same scrolling position the <code>wheel</code> event is blocked with <code>preventDefault()</code>. Thus, if you really want this feature for your users you'll have to explicitly add <code>mouseScroll={true}</code>.</p>
 </details>
 
-<details>
-    <summary>Why does Google Chrome throw a <code>[Violation] Added non-passive event listener to a scroll-blocking 'touchmove' event.</code> warning in the console?</summary>
-    <p><code>touchmove</code> is used with <code>preventDefault()</code> to block scrolling on mobile while rotating the color knob. Even the <a href="https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#removing-the-need-to-cancel-events">Web Incubator Community Group</a> acknowledges that in some cases a passive event listener can't be used.</p>
-</details>
-
 <br>
-
-[Back To Top](#quick-links)
 
 ## Change log
 
 Please see [Releases][link-releases] for more information on what has changed recently.
 
-[Back To Top](#quick-links)
-
 ## Migration
 
-### Migration from v2
+### Migration from v3 to v4
+
+1. In an effort of project modernization, CJS build is no longer provided. The UMD build is deprecated and will be removed in a future version.
+2. Non-minified builds are no longer provided. Use the minified build artifacts instead.
+3. The StyleSheet in the `dist` directory has been renamed from `react-color-picker.min.css` to `style.css`. 
+
+### Migration from v2 to v3
 
 1. Double-click to move the knob to the current position of the pointer is gone since this is now the default behavior as soon as the clicks on the palette. If you had a tooltip or a help section in your app that described the shortcut you should remove it.
 
@@ -186,7 +162,7 @@ Please see [Releases][link-releases] for more information on what has changed re
   />
 ```
 
-### Migration from v1
+### Migration from v1 to v2
 
 v2 comes with lots of performance improvements like native CSS `conic-gradient` support and lots of bugfixes, but some things were changed as well.
 
@@ -232,15 +208,11 @@ v2 comes with lots of performance improvements like native CSS `conic-gradient` 
     * `@keyframes color-picker-ripple` -> `@keyframes rcp-ripple`
     * `@keyframes color-picker-beat` -> `@keyframes rcp-beat`
 
-[Back To Top](#quick-links)
-
 ## Contributing
 
 If you're interested in the project you can help out with feature requests, bugfixes, documentation improvements or any other helpful contributions. You can use the issue list of this repo for bug reports and feature requests and as well as for questions and support.
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
-
-[Back To Top](#quick-links)
 
 ## Credits
 
@@ -248,8 +220,6 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT
 - [All Contributors][link-contributors]
 
 This component is based on the great work that was done for the AngularJs color picker [angular-radial-color-picker][link-angularjs-color-picker].
-
-[Back To Top](#quick-links)
 
 ## License
 
@@ -262,5 +232,3 @@ The MIT License (MIT). Please see [License File](LICENSE) for more information.
 [link-author]: https://github.com/rkunev
 [link-contributors]: ../../contributors
 [link-releases]: ../../releases
-
-[Back To Top](#quick-links)
