@@ -355,11 +355,6 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@radial-color-picker/color-wheel@2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@radial-color-picker/color-wheel/-/color-wheel-2.2.4.tgz#31a5366671b5e5bce854a452fbbf4b51fbd9320f"
-  integrity sha512-WSrLfOo8aBEmdhqHZ0jnDRYOn0LGvAMgXr0FooUwBqznIZUr5F1tQ5SsuZ6rCNqfVE09xCpodXsz9/lO8Aq9lA==
-
 "@radial-color-picker/rotator@3.0.2":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@radial-color-picker/rotator/-/rotator-3.0.2.tgz#44289355f9dcf28f58af1a6964d28ef55b3ff518"

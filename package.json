@@ -15,7 +15,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@radial-color-picker/color-wheel": "2.2.4",
     "@radial-color-picker/rotator": "3.0.2"
   },
   "devDependencies": {

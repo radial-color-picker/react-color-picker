@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from 'react';
-import fillColorWheel from '@radial-color-picker/color-wheel';
 import Rotator from '@radial-color-picker/rotator';
 
 import './style.css';
@@ -34,7 +33,6 @@ const ColorPicker = ({
     className,
     ...rest
 }) => {
-    const paletteRef = useRef(null);
     const rotatorRef = useRef(null);
     const elRef = useRef(null);
     const rotator = useRef(null);
@@ -55,12 +53,6 @@ const ColorPicker = ({
     useEffect(() => {
         if (mouseScroll) {
             rotatorRef.current.addEventListener('wheel', onScroll);
-        }
-
-        const isConicGradientSupported = getComputedStyle(paletteRef.current).backgroundImage.includes('conic');
-
-        if (!isConicGradientSupported) {
-            fillColorWheel(paletteRef.current.firstElementChild, elRef.current.offsetWidth || 280);
         }
 
         rotator.current = new Rotator(rotatorRef.current, {
@@ -187,7 +179,7 @@ const ColorPicker = ({
             onKeyUp={onKeyUp}
             onKeyDown={onKeyDown}
         >
-            <div ref={paletteRef} className={`rcp__palette ${isPaletteIn ? 'in' : 'out'}`}>
+            <div className={`rcp__palette ${isPaletteIn ? 'in' : 'out'}`}>
                 <canvas />
             </div>
 
