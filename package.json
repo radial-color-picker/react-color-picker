@@ -1,9 +1,9 @@
 {
   "name": "@radial-color-picker/react-color-picker",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Radial Color Picker - React",
   "type": "module",
-  "module": "dist/react-color-picker.esm.js",
+  "module": "dist/react-color-picker.js",
   "unpkg": "dist/react-color-picker.umd.cjs",
   "typings": "./index.d.ts",
   "files": [
